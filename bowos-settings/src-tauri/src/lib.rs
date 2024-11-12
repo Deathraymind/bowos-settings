@@ -2,6 +2,8 @@ use std::fs::{self, write};
 use std::path::Path;
 use std::env;
 use std::process::{Command, Stdio};
+use rfd::FileDialog;
+
 
 #[tauri::command]
 fn set_wallpaper(name: &str) -> String {
@@ -42,11 +44,33 @@ fn set_wallpaper(name: &str) -> String {
 }
 
 
+#[tauri::command]
+fn select_wallpaper() -> String {
+    let user_name = env::var("USER").unwrap_or_else(|_| "default_user".to_string());
+    let dir_path = format!("/home/{}", user_name);
+    let files = FileDialog::new()
+        .set_directory(dir_path)
+        .pick_files();
+
+    if let Some(paths) = files {
+        for path in paths {
+            println!("Selected file: {:?}", path);
+            let wallpaperdir = path.into_os_string().into_string().unwrap();
+            set_wallpaper(&wallpaperdir);
+        }
+    }
+
+    
+    "Wallpaper selection executed".to_string() // Example return value
+}
+
+
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![set_wallpaper])
+        .invoke_handler(tauri::generate_handler![set_wallpaper, select_wallpaper])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
