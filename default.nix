@@ -10,18 +10,31 @@ let
 in
 rustPlatform.buildRustPackage rec {
   pname = "bowos-settings";
-  version = "v2.0.0";
+  version = "v2.0.1";
 
   # Point to the directory containing Cargo.toml and Cargo.lock
 
-  src = fetchFromGitHub {
+  src = pkgs.fetchFromGitHub {
     owner = "deathraymind";
     repo = "bowos-settings";
     rev = version;
-    hash = "";
+    hash = "sha256-RgjLlvaLB2T1I5tRMqISzTNrlcDSLW/CIK+SmS2eCd0=";
     fetchSubmodules = true;
+    
   };
+
+  buildPhase = ''
+  export CARGO_HOME=$TMP/cargo
+  export RUSTFLAGS="-C target-cpu=native"
+  cargo build --release --locked --manifest-path ${src}/bowos-settings/src-tauri/Cargo.toml
+'';
+
+
   
+cargoLock = {
+  lockFile = "${src}/bowos-settings/src-tauri/Cargo.lock";
+};
+
 
   # Use a placeholder for cargoSha256
   cargoSha256 = "1MtDUhSQXCI8VDBLfckxLqoIuK9b6wu+HkaHwRGCbZk=";  
