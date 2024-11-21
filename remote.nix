@@ -14,15 +14,15 @@ rustPlatform.buildRustPackage rec {
   git = pkgs.fetchFromGitHub {
     owner = "deathraymind";
     repo = "bowos-settings";
-    rev = "v2.0.3";
-    hash = "sha256-hZY/XsIxRtSA/UBCrzTr+YqBfMBQ/JBQO5pCpVEPZYU=";
+    rev = "v2.0.4";
+    hash = "sha256-aJh7Okttcr+pn7XT7COipkqyc1DMhhffva9opolfLBk=";
     fetchSubmodules = true;
   };
 
   src = "${git}/bowos-settings/src-tauri/";
 
   # Use a placeholder for cargoSha256
-  cargoSha256 = "sha256-1Q11fWjpuklDO9EQxmJgrhD+It7ImDM2pbICY/CHi54=";
+  cargoSha256 = "sha256-Ui8g/X/NFHV2wNyC2jisnOw8PmMNnHoo3CGESzgMp+8=";
 
   # Native build inputs
   nativeBuildInputs = [
