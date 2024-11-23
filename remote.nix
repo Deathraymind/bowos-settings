@@ -9,7 +9,7 @@ let
 in
 rustPlatform.buildRustPackage rec {
   pname = "bowos-settings";
-  version = "v2.0.3";
+  version = "v2.0.4";
 
   git = pkgs.fetchFromGitHub {
     owner = "deathraymind";
@@ -46,17 +46,6 @@ rustPlatform.buildRustPackage rec {
   installPhase = ''
     mkdir -p $out/bin
     cp "${git}/result/bin/bowos-settings" $out/bin/
-    
-    # Create .desktop file
-    mkdir -p $out/share/applications
-    cat > $out/share/applications/bowos-settings.desktop <<EOF
-    [Desktop Entry]
-    Name=BowOS Settings
-    Exec=$out/bin/bowos-settings
-    Icon=$out/share/icons/bowos-settings.png
-    Type=Application
-    Categories=Utility;Settings;
-    EOF
 
 
    
