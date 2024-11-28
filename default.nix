@@ -1,9 +1,4 @@
-{
-  pkgs ? import (fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
-    sha256 = "0sr45csfh2ff8w7jpnkkgl22aa89sza4jlhs6wq0368dpmklsl8g";
-  }) { },
-}:
+{ pkgs ? import <nixpkgs> { } }:
 
 let
   rustPlatform = pkgs.rustPlatform;
@@ -15,14 +10,12 @@ rustPlatform.buildRustPackage rec {
 
   # Point to the directory containing Cargo.toml and Cargo.lock
 
-  src = ./bowos-settings/src-tauri;
+  src = ./.;
 
-  cargoLock = {
-    lockFile = ./bowos-settings/src-tauri/Cargo.lock;
-  };
+
 
   # Use a placeholder for cargoSha256
-  # cargoSha256 = "1MtDUhSQXCI8VDBLfckxLqoIuK9b6wu+HkaHwRGCbZk=";
+  cargoSha256 = "sha256-mAD0yQNb49edyZjnelndOES5Ek+FgxpNnjMPzXWIY7c=";
 
   # Native build inputs
   nativeBuildInputs = [

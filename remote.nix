@@ -9,20 +9,18 @@ let
 in
 rustPlatform.buildRustPackage rec {
   pname = "bowos-settings";
-  version = "v2.0.4";
+  version = "v2.0.5";
 
-  git = pkgs.fetchFromGitHub {
+  src = pkgs.fetchFromGitHub {
     owner = "deathraymind";
     repo = "bowos-settings";
-    rev = "v2.0.4";
-    hash = "sha256-aJh7Okttcr+pn7XT7COipkqyc1DMhhffva9opolfLBk=";
+    rev = "v2.0.5";
+    hash = "sha256-cJ1oVNebylVa+kfF2m/jqzvd0gbAfRJfK/l82j6SP+U=";
     fetchSubmodules = true;
   };
 
-  src = "${git}/bowos-settings/src-tauri/";
-
   # Use a placeholder for cargoSha256
-  cargoSha256 = "sha256-Ui8g/X/NFHV2wNyC2jisnOw8PmMNnHoo3CGESzgMp+8=";
+  cargoSha256 = "sha256-xOrwVeFqGxE1ihHdJBvvExw4Ww6GqE0129t6uzc4Y4w=";
 
   # Native build inputs
   nativeBuildInputs = [
@@ -43,13 +41,6 @@ rustPlatform.buildRustPackage rec {
     pkgs.webkitgtk_4_1.dev 
   ];
 
-  installPhase = ''
-    mkdir -p $out/bin
-    cp "${git}/result/bin/bowos-settings" $out/bin/
-
-
-   
-  '';
 
   meta = with lib; {
     description = "BowOS Settings App";
