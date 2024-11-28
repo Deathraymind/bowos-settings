@@ -1,73 +1,62 @@
-{ lib
-, stdenv
-, rustPlatform
-, nodejs
-, pnpm_9
-, wrapGAppsHook3
-, cargo
-, rustc
-, pkg-config
-, esbuild
-, buildGoModule
-, libayatana-appindicator
-, gtk3
-, webkitgtk_4_1
-, libsoup
-, openssl
-, xdotool
-}: 
+{
+  lib,
+  rustPlatform,
+  fetchFromGitHub,
+  pkg-config,
+  wrapGAppsHook,
+  atk,
+  cairo,
+  gdk-pixbuf,
+  glib,
+  gtk3,
+  libsoup_3,
+  pango,
+  webkitgtk_4_1,
+  stdenv,
+  darwin,
+  wayland,
+}:
 
-let 
-  pnpm = pnpm_9;
-in 
-stdenv.mkDerivation rec {
+rustPlatform.buildRustPackage rec {
   pname = "bowos-settings";
-  version = "v2.0.0";
-  
-  src = ./build/.;  # Use current directory as source
-  
-  postPatch = ''
-    substituteInPlace $cargoDepsCopy/libappindicator-sys-*/src/lib.rs \
-      --replace "libayatana-appindicator3.so.1" "${libayatana-appindicator}/lib/libayatana-appindicator3.so.1"
-  '';
+  version = "2.0.5";
 
-  cargoDeps = rustPlatform.importCargoLock { 
-    lockFile = ./bowos-settings/src-tauri/Cargo.lock;  # Adjust path based on your directory structure
+  src = fetchFromGitHub {
+    owner = "deathraymind";
+    repo = "bowos-settings";
+    rev = "v${version}";
+    hash = "sha256-cJ1oVNebylVa+kfF2m/jqzvd0gbAfRJfK/l82j6SP+U=";
   };
 
-  pnpmRoot = "..";
+  cargoHash = "sha256-PCUit/aMHwe7td7Nu5b/xHLCL0REDlZoo7w+q9vqp4M=";
 
   nativeBuildInputs = [
-    rustPlatform.cargoSetupHook
-    cargo
-    rustc
-    nodejs
-    pnpm.configHook
-    wrapGAppsHook3
     pkg-config
+    wrapGAppsHook
   ];
 
   buildInputs = [
+    atk
+    cairo
+    gdk-pixbuf
+    glib
     gtk3
-    libsoup
-    libayatana-appindicator
-    openssl
+    libsoup_3
+    pango
     webkitgtk_4_1
-    xdotool
+  ] ++ lib.optionals stdenv.isDarwin [
+    darwin.apple_sdk.frameworks.AppKit
+    darwin.apple_sdk.frameworks.CoreGraphics
+    darwin.apple_sdk.frameworks.Foundation
+  ] ++ lib.optionals stdenv.isLinux [
+    wayland
   ];
 
-
-
-  preConfigure = ''
-    # Make parent directory writable for pnpm.configHook
-  '';
-
-  meta = with lib; {
-    description = "Settings app for BowOS.";
+  meta = {
+    description = "";
+    homepage = "https://github.com/deathraymind/bowos-settings";
+    license = lib.licenses.unfree; # FIXME: nix-init did not find a license
+    maintainers = with lib.maintainers; [ ];
     mainProgram = "bowos-settings";
-    homepage = "https://bowos-settings.example.com";
-    platforms = platforms.linux;
-    license = licenses.mit;
-    maintainers = [ maintainers.your-maintainer ];
   };
 }
