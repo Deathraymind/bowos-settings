@@ -65,3 +65,14 @@ nix-build -E "(import <nixpkgs> {}).callPackage ./. {}"
 
 This will generate the binary in the `result` directory. It's a simple and effective way to verify the build process.
 
+# Making it a Package
+
+We have the binary and it successfully compiled but we need to output it to our nix-env on our entire system, this is simple. I have created a package.nix which looks fairly simple because it is. It just helps make the default. nix compilable on our system as a flake or normal nix config file. So if we run the command. 
+
+```bash
+nix-env -i -f package.nix
+```
+
+now we can run bowos-settings from anywhere on our system!!!
+
+
